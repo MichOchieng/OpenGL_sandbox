@@ -6,4 +6,5 @@ target_link_libraries(hello_triangle
     PRIVATE
         glad::glad
         glfw
+        common
 )
