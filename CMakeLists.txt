@@ -13,6 +13,23 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(glad)
 find_package(glfw3)
 
+# Libraries
+add_library(common
+    common/src/window/window.cpp
+)
+
+target_include_directories(common
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/common/include
+)
+
+target_link_libraries(common
+    PUBLIC
+        glad::glad
+        glfw
+)
+
 # Example subdirectories
 
 add_subdirectory(examples/hello_window)
+# add_subdirectory(examples/hello_triangle)
