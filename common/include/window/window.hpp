@@ -38,4 +38,4 @@ class Window {
         // init helpers
         bool initGLFW(); // setup GLFW w/ OpenGL context settings
         bool initGLAD(); // load OpenGl function pointers
-}
+};
