@@ -3,13 +3,10 @@
 
 int main() {
     try {
-        Window window(800, 600, "Hello Window");
+        Window window(800, 600, "Example 1: Hello Window");
 
         while (!window.shouldClose()) {
             window.processInput();
-
-            // Your rendering code here
-
             window.swapBuffers();
             window.pollEvents();
         }
