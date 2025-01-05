@@ -32,4 +32,4 @@ target_link_libraries(common
 # Example subdirectories
 
 add_subdirectory(examples/hello_window)
-# add_subdirectory(examples/hello_triangle)
+add_subdirectory(examples/hello_triangle)
