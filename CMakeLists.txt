@@ -33,3 +33,5 @@ target_link_libraries(common
 
 add_subdirectory(examples/hello_window)
 add_subdirectory(examples/hello_triangle)
+
+add_subdirectory(examples/shaders)
