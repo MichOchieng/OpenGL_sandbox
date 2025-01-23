@@ -11,7 +11,7 @@ int main()
     // Build & compile shader program
     // ------------------------------------
     
-    Shader ourShader("shader.vs", "shader.fs");
+    Shader ourShader("resources/shaders/3.3/shader.vs", "resources/shaders/3.3/shader.fs");
 
     // set up vertex data + buffers & config vertex attributes     
     float vertices[] = {
