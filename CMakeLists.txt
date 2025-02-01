@@ -35,3 +35,4 @@ add_subdirectory(examples/hello_window)
 add_subdirectory(examples/hello_triangle)
 
 add_subdirectory(examples/shaders)
+add_subdirectory(examples/textures)
