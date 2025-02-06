@@ -2,8 +2,8 @@
 A collection of examples from [learn OpenGL](https://learnopengl.com)
 
 ## Requirements
-[Conan](https://conan.io/)
-[CMake](https://cmake.org/)
+[Conan](https://conan.io/) \
+[CMake](https://cmake.org/) \
 C Compiler of your choice:
 - [GCC](https://gcc.gnu.org/)
 - [MSBuild](https://github.com/dotnet/msbuild)
