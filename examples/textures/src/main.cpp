@@ -80,6 +80,7 @@ int main()
     // Load and create a texture
     // -------------------------
     unsigned int texture1;
+    float currentTime = 0.0f; // for animation
 
     glGenTextures(1, &texture1);
     glBindTexture(GL_TEXTURE_2D, texture1);
@@ -128,7 +129,9 @@ int main()
         {
             window.processInput();
 
-            // render
+             // Update time
+            currentTime = glfwGetTime(); // Gets time since GLFW initialized
+
             // clear the colorbuffer
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
@@ -136,8 +139,11 @@ int main()
             // bind textures on corresponding texture units
             glBindTexture(GL_TEXTURE_2D, texture1);
 
-            // now render the triangle
+            // Use shader and update time uniform
             ourShader.use();
+            ourShader.setFloat("time", currentTime);
+
+            // now render the triangle
             glBindVertexArray(VAO);
             glDrawArrays(GL_TRIANGLE_FAN, 0, 12);
 
