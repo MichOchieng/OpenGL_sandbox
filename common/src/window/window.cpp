@@ -1,7 +1,7 @@
 #include "window/window.hpp"
 #include <iostream>
 
-Window::Window(int width, int height, const std::string &title) : width(width), height(height), title(title), window(nullptr)
+Window::Window(int width, int height, const std::string &title, bool isFullscreen) : width(width), height(height), title(title), window(nullptr)
 {
 
     if (!initGLFW())
@@ -9,7 +9,14 @@ Window::Window(int width, int height, const std::string &title) : width(width), 
         throw std::runtime_error("Failed to initialize GLFW!");
     }
 
-    window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+    if (isFullscreen)
+    {
+        window = glfwCreateWindow(width, height, title.c_str(), glfwGetPrimaryMonitor(), nullptr);
+    }
+    else
+    {
+        window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+    }
 
     if (!window)
     {
