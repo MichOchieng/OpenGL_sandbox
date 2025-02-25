@@ -12,6 +12,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(glad)
 find_package(glfw3)
+find_package(glm)
 
 # Libraries
 add_library(common
@@ -27,6 +28,7 @@ target_link_libraries(common
     PUBLIC
         glad::glad
         glfw
+        glm::glm
 )
 
 # Example subdirectories
@@ -36,3 +38,4 @@ add_subdirectory(examples/hello_triangle)
 
 add_subdirectory(examples/shaders)
 add_subdirectory(examples/textures)
+add_subdirectory(examples/camera)
