@@ -3,146 +3,24 @@
 #include "shader/shader.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "camera/camera.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
-bool up, down, left, right, forward, backward = false;
-
-auto position = glm::vec3(0.0f, 0.0f, 0.0f);
-
-float yaw = 0.0f;
-float pitch = 0.0f;
-float speed = 10.0f;
-float two_pi = 2.0f * 3.14159265359f;
-float selected_speed = 10.0f;
-float fov = 60.0f;
-float near_plane = 0.1f;
-float far_plane = 100.0f;
-
-float deltaTime = 0.0f;
-
-float mouseSensitivity = 0.001f;
-
-double prevXPos = 0.0;
-double prevYPos = 0.0;
-
-static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
-{
-
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-    if (key == GLFW_KEY_W && action == GLFW_PRESS)
-        forward = true;
-    if (key == GLFW_KEY_W && action == GLFW_RELEASE)
-        forward = false;
-    if (key == GLFW_KEY_S && action == GLFW_PRESS)
-        backward = true;
-    if (key == GLFW_KEY_S && action == GLFW_RELEASE)
-        backward = false;
-    if (key == GLFW_KEY_A && action == GLFW_PRESS)
-        left = true;
-    if (key == GLFW_KEY_A && action == GLFW_RELEASE)
-        left = false;
-    if (key == GLFW_KEY_D && action == GLFW_PRESS)
-        right = true;
-    if (key == GLFW_KEY_D && action == GLFW_RELEASE)
-        right = false;
-    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
-        up = true;
-    if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
-        up = false;
-    if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS)
-        down = true;
-    if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE)
-        down = false;
-}
-
-static void cursor_position_callback(GLFWwindow *window, double xpos, double ypos)
-{
-
-    float xoffset = (xpos - prevXPos) * mouseSensitivity;
-    float yoffset = (prevYPos - ypos) * mouseSensitivity; // reversed since y-coordinates go from bottom to top
-    yaw += xoffset;
-    pitch += yoffset;
-    prevXPos = xpos;
-    prevYPos = ypos;
-}
-
-glm::vec3 get_look_vector()
-{
-    glm::vec3 forward;
-    forward.x = cos(pitch * two_pi) * cos(yaw * two_pi);
-    forward.y = sin(pitch * two_pi);
-    forward.z = cos(pitch * two_pi) * sin(yaw * two_pi);
-    return glm::normalize(forward);
-}
-
-void process_input()
-{
-
-    // float delta_pos = selected_speed * deltaTime;
-
-    glm::vec3 up_vec = glm::vec3(0.0f, 1.0f, 0.0f);
-
-    // Compute forward and right vectors
-    glm::vec3 forward_vec = get_look_vector();
-    glm::vec3 right_vec = glm::normalize(glm::cross(forward_vec, up_vec)); // Up vector is (0, 1, 0)
-    // std::cout << forward_vec.x << std::endl;
-    // std::cout << forward_vec.y << std::endl;
-    // std::cout << "----" << std::endl;
-    glm::vec3 movement(0.0f);
-
-    if (forward)
-    {
-        movement += forward_vec;
-    }
-    if (backward)
-        movement -= forward_vec;
-    if (left)
-        movement -= right_vec;
-    if (right)
-        movement += right_vec;
-    if (up)
-        movement += up_vec;
-    if (down)
-        movement -= up_vec;
-
-    if (glm::length(movement) > 0.0f)
-    {
-        movement = glm::normalize(movement);
-    }
-
-    position += movement * deltaTime;
-}
-
-glm::mat4 get_view_matrix()
-{
-    return glm::lookAt(position, position + get_look_vector(),
-                       glm::vec3(0.0f, 1.0f, 0.0f));
-}
-
-glm::mat4 get_projection_matrix(int screen_width_px,
-                                           int screen_height_px)
-{
-
-    return glm::perspective(glm::radians(fov),
-                            static_cast<float>(screen_width_px) / static_cast<float>(screen_height_px), near_plane,
-                            far_plane);
-}
 
 int main()
 {
     // Create a 800 x 600 window titled "Example 4: Textures"
     int SCR_WIDTH = 1920;
     int SCR_HEIGHT = 1080;
-    std::string title = "Example 4: Textures";
+    std::string title = "Example 5: Camera";
+
     Window window(SCR_WIDTH, SCR_HEIGHT, title,true);
+    Camera camera(glm::vec3(0.0f,0.0f,0.0f));
 
-    glfwSetKeyCallback(window.window, key_callback);
-    glfwSetCursorPosCallback(window.window, cursor_position_callback);
-    glfwSetInputMode(window.window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-
+    camera.registerCallbacks(window.window);
+    
     // Build & compile shader program
 
     Shader ourShader("resources/shaders/3.3/star_shader_cam.vs", "resources/shaders/3.3/star_shader.fs");
@@ -258,7 +136,6 @@ int main()
     // float speed = 10.0f;
 
     float prevTime = glfwGetTime();
-
     // bool up, down, left, right, forward, backward = false;
 
     try
@@ -267,13 +144,15 @@ int main()
         while (!window.shouldClose())
         {
             window.processInput();
-            process_input();
 
             // Update time
             currentTime = glfwGetTime(); // Gets time since GLFW initialized
-            deltaTime = currentTime - prevTime;
+            float deltaTime = currentTime - prevTime;
 
-            // clear the colorbuffer
+            // Update camera
+            camera.update(deltaTime);
+
+            // Render - clear the colorbuffer
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
 
@@ -283,9 +162,9 @@ int main()
             // Use shader and update time uniform
             ourShader.use();
             ourShader.setFloat("time", currentTime);
-            ourShader.setMat4("camera_to_clip", get_projection_matrix(SCR_WIDTH, SCR_HEIGHT));
+            ourShader.setMat4("camera_to_clip", camera.getProjectionMatrix(SCR_WIDTH, SCR_HEIGHT));
             ourShader.setMat4("local_to_world", glm::mat4(1.0f));
-            ourShader.setMat4("world_to_camera", get_view_matrix());
+            ourShader.setMat4("world_to_camera", camera.getViewMatrix());
 
             // now render the triangle
             glBindVertexArray(VAO);
