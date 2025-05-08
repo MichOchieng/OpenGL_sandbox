@@ -19,6 +19,7 @@ find_package(assimp)
 add_library(common
     common/src/window/window.cpp
     common/src/model_loader/model_loader.cpp
+    common/src/camera/camera.cpp
 )
 
 target_include_directories(common
