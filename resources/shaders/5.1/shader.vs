@@ -16,10 +16,10 @@ uniform mat4 local_to_world;
 void main()
 {
     // Calculate hover motion
-    float hover = sin(time * 2.0) * 0.1;
+    float hover = sin(time * 2.0) * 0.01;
     
-    // 3D rotation around Y axis
-    float angle = time;
+    // 3D rotation around Y axis - Controls spinning
+    float angle = time * 0.5;
     mat3 rotationY = mat3(
         cos(angle), 0.0, sin(angle),   // first column
         0.0, 1.0, 0.0,                 // second column
