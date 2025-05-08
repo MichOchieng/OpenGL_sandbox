@@ -12,10 +12,14 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(glad)
 find_package(glfw3)
+find_package(glm)
+find_package(assimp)
 
 # Libraries
 add_library(common
     common/src/window/window.cpp
+    common/src/model_loader/model_loader.cpp
+    common/src/camera/camera.cpp
 )
 
 target_include_directories(common
@@ -27,6 +31,8 @@ target_link_libraries(common
     PUBLIC
         glad::glad
         glfw
+        glm::glm
+        assimp::assimp
 )
 
 # Example subdirectories
@@ -35,3 +41,7 @@ add_subdirectory(examples/hello_window)
 add_subdirectory(examples/hello_triangle)
 
 add_subdirectory(examples/shaders)
+add_subdirectory(examples/textures)
+add_subdirectory(examples/camera)
+
+add_subdirectory(examples/models)

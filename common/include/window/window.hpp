@@ -10,11 +10,12 @@ class Window {
         // width: 800px
         // height: 600px
         // title: OpenGL Sandbox
-
+        GLFWwindow* window;
         Window(
             int width = 800,
             int height = 600,
-            const std::string& title = "OpenGL Sandbox"
+            const std::string& title = "OpenGL Sandbox",
+            bool isFullscreen = false
         );
 
         ~Window(); // clean up resources
@@ -27,7 +28,6 @@ class Window {
         GLFWwindow* getWindow() { return window; }
 
     private:
-        GLFWwindow* window;
         int width;
         int height;
         std::string title;

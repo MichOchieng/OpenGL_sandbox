@@ -12,6 +12,8 @@ int main()
     // ------------------------------------
     
     Shader ourShader("resources/shaders/3.3/shader.vs", "resources/shaders/3.3/shader.fs");
+    float offset = 1.0f;
+    ourShader.setFloat("xOffset", offset);
 
     // set up vertex data + buffers & config vertex attributes     
     float vertices[] = {
